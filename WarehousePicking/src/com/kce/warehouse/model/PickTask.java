@@ -1,11 +1,9 @@
 package com.kce.warehouse.model;
-
 public class PickTask extends Task {
     private Item item;
     private Location location;
     private int requiredQty;
     private int pickedQty;
-
     public PickTask(String taskId, Item item, Location location, int requiredQty) {
         super(taskId);
         this.item = item;
@@ -13,11 +11,8 @@ public class PickTask extends Task {
         this.requiredQty = requiredQty;
         this.pickedQty = 0;
     }
-
     @Override
     public boolean perform() {
-        // perform here is domain-specific; the actual pick action is handled by service.
-        // We'll mark IN_PROGRESS when pick begins, COMPLETED when pickedQty == requiredQty
         if ("CREATED".equals(status)) status = "IN_PROGRESS";
         if (pickedQty >= requiredQty) {
             status = "COMPLETED";
@@ -51,7 +46,6 @@ public class PickTask extends Task {
             status = "IN_PROGRESS";
         }
     }
-
     @Override
     public String toString() {
         return "PickTask[" + taskId + "] item=" + item + " loc=" + location + " req=" + requiredQty + " picked=" + pickedQty + " status=" + status;

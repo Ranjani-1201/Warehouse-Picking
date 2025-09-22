@@ -1,18 +1,11 @@
 package com.kce.warehouse.main;
-
 import com.kce.warehouse.exception.BusinessException;
 import com.kce.warehouse.model.*;
 import com.kce.warehouse.service.WarehouseService;
-
 import java.util.*;
-
-/*
- Main console menu for the Warehouse operations system
-*/
 public class MainApp {
     private static WarehouseService svc = new WarehouseService();
     private static Scanner sc = new Scanner(System.in);
-
     public static void main(String[] args) {
         seedDemoData();
         boolean exit = false;
@@ -38,10 +31,8 @@ public class MainApp {
                 System.out.println("Error: " + ex.getMessage());
                 ex.printStackTrace();
             }
-        }
-    }
-
-    private static void printMenu() {
+        } }
+ private static void printMenu() {
         System.out.println("\n=== Warehouse Operations ===");
         System.out.println("1. Add Item");
         System.out.println("2. Add Location");
@@ -53,23 +44,19 @@ public class MainApp {
         System.out.println("8. Inventory Summary");
         System.out.println("9. Exit");
     }
-
-    private static void addItem() {
+ private static void addItem() {
         System.out.println("Add Item");
         String name = readString("Name: ");
         String desc = readString("Description: ");
         Item it = svc.addItem(name, desc);
         System.out.println("Added item: " + it);
-    }
-
-    private static void addLocation() {
+    }  private static void addLocation() {
         System.out.println("Add Location");
         String name = readString("Location name: ");
         Location loc = svc.addLocation(name);
         System.out.println("Added location: " + loc);
     }
-
-    private static void adjustInventory() throws BusinessException {
+private static void adjustInventory() throws BusinessException {
         System.out.println("Adjust Inventory");
         listItems();
         String itemId = readString("ItemId: ");
@@ -80,8 +67,7 @@ public class MainApp {
         System.out.println("Inventory updated: Item " + rec.getItem() + " Location " + rec.getLocation() + " Qty " + rec.getQuantity());
         svc.inventorySnapshot();
     }
-
-    private static void createPickList() throws BusinessException {
+ private static void createPickList() throws BusinessException {
         System.out.println("Create Pick List");
         Map<String, Integer> req = new HashMap<>();
         while (true) {
@@ -104,8 +90,7 @@ public class MainApp {
         svc.showPickListSummary(pl.getPickListId());
         svc.inventorySnapshot();
     }
-
-    private static void recordPick() throws BusinessException {
+ private static void recordPick() throws BusinessException {
         System.out.println("Record Pick");
         listPickLists();
         String pickListId = readString("PickListId: ");
@@ -117,16 +102,13 @@ public class MainApp {
         svc.showPickListSummary(pickListId);
         svc.inventorySnapshot();
     }
-
-    private static void createPack() throws BusinessException {
+ private static void createPack() throws BusinessException {
         System.out.println("Create Pack");
         listPickLists();
         String pickListId = readString("PickListId: ");
         Pack pack = svc.createPack(pickListId);
         System.out.println("Created Pack: " + pack.getPackId());
         svc.showPackSummary(pack.getPackId());
-
-        // Ask user to confirm packed quantities (input pack confirmations)
         Map<String, Integer> confirmations = new HashMap<>();
         System.out.println("Confirm packed quantities for the above items (or type 'skip' to accept picked quantities):");
         for (PickTask t : pack.getPickList().getTasks()) {
@@ -149,8 +131,7 @@ public class MainApp {
         System.out.println("Pack confirmed.");
         svc.showPackSummary(pack.getPackId());
     }
-
-    private static void shipOrder() throws BusinessException {
+ private static void shipOrder() throws BusinessException {
         System.out.println("Ship Order");
         listPacks();
         String packId = readString("PackId: ");
@@ -166,18 +147,14 @@ public class MainApp {
             svc.showShipmentManifest(s.getShipmentId());
         }
     }
-
-    private static void inventorySummary() {
+ private static void inventorySummary() {
         svc.inventorySnapshot();
     }
-
-    // helpers for listing and input
-    private static String readString(String prompt) {
+ private static String readString(String prompt) {
         System.out.print(prompt);
         return sc.nextLine().trim();
     }
-
-    private static int readInt(String prompt) {
+ private static int readInt(String prompt) {
         while (true) {
             System.out.print(prompt);
             String l = sc.nextLine().trim();
@@ -188,36 +165,31 @@ public class MainApp {
             }
         }
     }
-
-    private static void listItems() {
+ private static void listItems() {
         System.out.println("Items:");
         for (Item it : svc.listItems()) {
             System.out.println("   " + it.getItemId() + " - " + it.getName());
         }
     }
-
-    private static void listLocations() {
+ private static void listLocations() {
         System.out.println("Locations:");
         for (Location loc : svc.listLocations()) {
             System.out.println("   " + loc.getLocationId() + " - " + loc.getName());
         }
     }
-
-    private static void listPickLists() {
+ private static void listPickLists() {
         System.out.println("PickLists:");
         for (PickList pl : svc.listPickLists()) {
             System.out.println("   " + pl.getPickListId() + " Status: " + pl.getStatus());
         }
     }
-
-    private static void listPacks() {
+private static void listPacks() {
         System.out.println("Packs:");
         for (Pack p : svc.listPacks()) {
             System.out.println("   " + p.getPackId() + " For PickList: " + p.getPickList().getPickListId() + " Status: " + p.getStatus());
         }
     }
-
-    private static void seedDemoData() {
+private static void seedDemoData() {
         System.out.println("Seeding sample data...");
         Item a = svc.addItem("Widget-A", "Small widget");
         Item b = svc.addItem("Widget-B", "Large widget");
